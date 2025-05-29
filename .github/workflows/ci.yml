@@ -25,12 +25,18 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-buildx-
 
+      - name: Logando no DockerHub (opcional, se quiser cache público)
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
       - name: Build containers
-        run: docker-compose -f backend/docker-compose.ci.yml build
+        run: docker compose -f backend/docker-compose.ci.yml build
 
       - name: Run tests
-        run: docker-compose -f backend/docker-compose.ci.yml up --abort-on-container-exit --exit-code-from backend
+        run: docker compose -f backend/docker-compose.ci.yml up --abort-on-container-exit --exit-code-from backend
 
       - name: Stop containers
         if: always()
-        run: docker-compose -f backend/docker-compose.ci.yml down -v
+        run: docker compose -f backend/docker-compose.ci.yml down -v
