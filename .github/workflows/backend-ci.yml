@@ -1,0 +1,34 @@
+name: Backend CI
+
+on:
+  push:
+    paths:
+      - 'backend/**'
+      - 'shared-backend-files/**' # caso tenha arquivos compartilhados backend
+    branches:
+      - main
+  pull_request:
+    paths:
+      - 'backend/**'
+      - 'shared-backend-files/**'
+    branches:
+      - main
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+
+      # seus steps para backend aqui, exemplo:
+      - name: Build Docker backend
+        run: docker-compose -f backend/docker-compose.ci.yml build
+
+      - name: Rodar testes backend
+        run: docker-compose -f backend/docker-compose.ci.yml up --abort-on-container-exit --exit-code-from backend
+
+      - name: Parar containers backend
+        if: always()
+        run: docker-compose -f backend/docker-compose.ci.yml down -v

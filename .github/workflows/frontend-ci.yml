@@ -1,0 +1,40 @@
+name: Frontend CI
+
+on:
+  push:
+    paths:
+      - 'frontend/**'
+      - 'shared-frontend-files/**' # se houver arquivos compartilhados
+    branches:
+      - main
+  pull_request:
+    paths:
+      - 'frontend/**'
+      - 'shared-frontend-files/**'
+    branches:
+      - main
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18' # ou outra versão que use
+
+      - name: Instalar dependências
+        run: npm ci
+        working-directory: ./frontend
+
+      - name: Rodar lint
+        run: npm run lint
+        working-directory: ./frontend
+
+      - name: Build frontend
+        run: npm run build
+        working-directory: ./frontend
