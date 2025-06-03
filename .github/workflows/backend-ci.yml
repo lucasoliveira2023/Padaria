@@ -22,13 +22,28 @@ jobs:
       - name: Checkout código
         uses: actions/checkout@v4
 
+      - name: Set up Python for lint
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+
+      - name: Install pre-commit
+        run: |
+          pip install pre-commit
+
+      - name: Run pre-commit
+        run: pre-commit run --all-files --show-diff-on-failure
+
       # seus steps para backend aqui, exemplo:
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
       - name: Build Docker backend
-        run: docker-compose -f backend/docker-compose.ci.yml build
+        run: docker compose -f backend/docker-compose.ci.yml build
 
       - name: Rodar testes backend
-        run: docker-compose -f backend/docker-compose.ci.yml up --abort-on-container-exit --exit-code-from backend
+        run: docker compose -f backend/docker-compose.ci.yml up --abort-on-container-exit --exit-code-from backend
 
       - name: Parar containers backend
         if: always()
-        run: docker-compose -f backend/docker-compose.ci.yml down -v
+        run: docker compose -f backend/docker-compose.ci.yml down -v
