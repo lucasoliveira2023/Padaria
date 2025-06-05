@@ -31,7 +31,7 @@ SECRET_KEY = os.getenv("SECRET_KEY", "unsafe-secret")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG", "True") == "True"
 
-ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "localhost").split(" ")
+ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "localhost").split(",")
 
 
 # Application definition
@@ -47,6 +47,9 @@ INSTALLED_APPS = [
     "vendas",
     "usuarios",
 ]
+
+AUTH_USER_MODEL = "usuarios.Usuario"
+
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
