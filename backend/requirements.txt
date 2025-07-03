@@ -46,3 +46,4 @@ flake8==6.1.0
 isort==5.13.2
 pre-commit==3.6.0
 bandit==1.7.8
+djangorestframework==3.16.0

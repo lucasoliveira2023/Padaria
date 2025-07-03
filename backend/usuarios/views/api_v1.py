@@ -7,7 +7,7 @@ from usuarios.serializers import RegistroUsuarioSerializer
 
 class RegistroUsuarioView(APIView):
     def post(self, request):
-        serializer = RegistroUsuarioSerializer
+        serializer = RegistroUsuarioSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(
