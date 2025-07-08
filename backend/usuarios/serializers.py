@@ -1,10 +1,26 @@
 from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
+from rest_framework.validators import UniqueValidator
 
 from usuarios.models import Usuario
 
 
 class RegistroUsuarioSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(
+        validators=[
+            UniqueValidator(
+                queryset=Usuario.objects.all(),
+                message="Este nome de usuário já esta em uso.",
+            )
+        ]
+    )
+    cpf = serializers.CharField(
+        validators=[
+            UniqueValidator(
+                queryset=Usuario.objects.all(), message="Este CPF já está cadastrado."
+            )
+        ]
+    )
     password = serializers.CharField(
         write_only=True, required=True, validators=[validate_password]
     )
@@ -20,16 +36,6 @@ class RegistroUsuarioSerializer(serializers.ModelSerializer):
             "telefone",
             "tipo_usuario",
         ]
-
-    def validate_username(self, value):
-        if Usuario.objects.filter(username=value).exists():
-            raise serializers.ValidationError("Este nome de usuário já esta em uso.")
-        return value
-
-    def validate_cpf(self, value):
-        if Usuario.objects.filter(cpf=value).exists():
-            raise serializers.ValidationError("Este CPF já está cadastrado.")
-        return value
 
     def create(self, validated_data):
         user = Usuario.objects.create_user(

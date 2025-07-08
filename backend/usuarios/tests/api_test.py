@@ -6,7 +6,7 @@ from usuarios.models import Usuario
 
 class RegistroUsuarioViewTest(APITestCase):
     def setUp(self):
-        self.url = "padaria/usuarios/rgistro/"
+        self.url = "/padaria/usuarios/registro/"
         self.valid_payload = {
             "username": "lucasdev",
             "password": "SenhaForte2025!",
@@ -18,7 +18,7 @@ class RegistroUsuarioViewTest(APITestCase):
     def test_criacao_usuario_com_dados_validos(self):
         response = self.client.post(self.url, self.valid_payload, format="json")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(response.data["messagem"], "Usuário registrado com sucesso!")
+        self.assertEqual(response.data["mensagem"], "Usuário registrado com sucesso!")
         self.assertTrue(Usuario.objects.filter(username="lucasdev").exists())
 
     def test_rejeita_usuario_sem_nome_completo(self):
@@ -37,7 +37,7 @@ class RegistroUsuarioViewTest(APITestCase):
         )
         response = self.client.post(self.url, self.valid_payload, format="json")
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertIn("username", response.data)
+        self.assertIn("cpf", response.data)
 
     def test_rejeita_usuario_com_nome_duplicado(self):
         Usuario.objects.create_user(

@@ -1,0 +1,9 @@
+[run]
+# Define quais pacotes/diretórios serão analisados
+source = usuarios, produtos, vendas
+
+# Exclui arquivos específicos e/ou padrões
+omit =
+    */manage.py
+    */migrations/*
+    */tests/*
