@@ -52,3 +52,19 @@ class UsuarioModelTest(TestCase):
             email="testuser@example.com",
         )
         self.assertEqual(str(usuario), "testuser")
+
+    def test_usuario_valido(self):
+        try:
+            self.usuario.full_clean()  # valida o model, deve passar sem exceção
+        except Exception as e:
+            self.fail(f"full_clean() lançou exceção inesperada: {e}")
+
+    def test_str_method_coverage(self):
+        usuario = Usuario.objects.create_user(
+            username="testuser2",
+            password="SenhaForte2025!",
+            nome_completo="Test User 2",
+            cpf="123.456.789-11",
+            email="testuser2@exemple.com",
+        )
+        self.assertEqual(str(usuario), "testuser2")
