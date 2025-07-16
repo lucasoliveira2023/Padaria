@@ -6,10 +6,16 @@ services:
       context: .
     command: >
       bash -c "
+      echo 'Aguardando o banco de dados ficar pronto...';
+      until pg_isready -h db -p 5432 -U padaria_user; do
+        sleep 1;
+      done;
+      echo 'Banco de dados pronto! Rodando migrations e testes...';
       python manage.py migrate &&
       python manage.py test --verbosity=2"
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     env_file:
       - ./.env.ci
 
