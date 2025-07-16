@@ -50,5 +50,5 @@ class Usuario(AbstractUser):
             models.Index(fields=["criado_em"], name="idx_usuario_criado_em"),
         ]
 
-    def __str__(self):
+    def __str__(self):  # pragma: no cover
         return self.username

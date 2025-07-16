@@ -1,0 +1,31 @@
+[run]
+source = usuarios, produtos, vendas
+
+omit =
+    */migrations/*
+    */tests/*
+    */tests.py
+    */manage.py
+    */settings.py
+    */wsgi.py
+    */asgi.py
+
+[report]
+exclude_lines =
+    # Ignore linhas marcadas para não cobrir
+    pragma: no cover
+
+    # Métodos triviais que não precisam de teste
+    def __str__
+    def __repr__
+
+    # Código que só roda na execução direta do arquivo
+    if __name__ == .__main__.:
+
+    # Exceções previstas que não precisam ser testadas diretamente
+    raise NotImplementedError
+    except ImportError
+    except ModuleNotFoundError
+
+    # Código condicional de debug
+    if settings.DEBUG
