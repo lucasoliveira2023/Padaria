@@ -100,3 +100,29 @@ class RegistroUsuarioViewTest(APITestCase):
         self.assertIn("password", response.data)
         self.assertIn("cpf", response.data)
         self.assertIn("nome_completo", response.data)
+
+
+class LoginViewTest(APITestCase):
+    def setUp(self):
+        self.username = "testuser"
+        self.password = "testpassword"
+        self.user = Usuario.objects.create_user(
+            username=self.username, password=self.password
+        )
+        self.url = reverse("usuarios:login-usuario")
+
+    def test_login_sucesso(self):
+        dados = {"username": self.username, "password": self.password}
+        response = self.client.post(self.url, data=dados, format="json")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("access", response.data)
+        self.assertIn("access", response.data)
+        self.assertEqual(response.data["username"], self.username)
+
+    def test_login_credenciais_invalidas(self):
+        dados = {"username": self.username, "password": "senhaerrada"}
+        response = self.client.post(self.url, data=dados, format="json")
+
+        self.assertEqual(response.status_code, 401)
+        self.assertEqual(response.data["detail"], "Usuário ou senha inválidos.")
