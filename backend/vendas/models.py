@@ -81,7 +81,3 @@ class ItemVenda(models.Model):
 
     def __str__(self):
         return f"{self.quantidade} x {self.produto.nome}"
-
-    def save(self, *args, **kwargs):
-        self.subtotal = self.quantidade * self.preco_unitario
-        super().save(*args, **kwargs)
