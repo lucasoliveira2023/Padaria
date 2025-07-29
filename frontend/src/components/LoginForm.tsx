@@ -1,38 +1,44 @@
 import React, { useState } from 'react';
 import '../pages/Login.css';
-import api from "../services/api";
 
-interface LoginFormProps {
-    onLogin:(email: string, password: string) => void;
-}
 
-export const LoginForm: React.FC<LoginFormProps> = ({ onLogin }) => {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+type LoginFormProps = {
+    onLogin: (email: string, senha: string) => Promise<void> | void;
+};
 
-    const handleSubmit = (e: React.FormEvent) => {
+const LoginForm: React.FC<LoginFormProps> = ({ onLogin }) => {
+    const [email, setEmail] = useState("");
+    const [senha, setSenha] = useState("");
+    const [erro, setErro] = useState("");
+
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        onLogin(email, password);
+        setErro('');
+        try {
+            await onLogin(email, senha);
+        } catch (err: any) {
+            setErro("E-mail ou senha inválidos");
+        }
     };
 
     return (
         <form onSubmit={handleSubmit} className="login-form">
-            <h2>Login</h2>
             <input
                 type="email"
-                placeholder="E-mail"
                 value={email}
-                onChange={e => setEmail(e.target.value)}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="E-mail"
                 required
             />
             <input
                 type="password"
+                value={senha}
+                onChange={e => setSenha(e.target.value)}
                 placeholder="Senha"
-                value={password}
-                onChange={e => setPassword(e.target.value)}
                 required
             />
             <button type="submit">Entrar</button>
+            {erro && <p style={{ color: "red"}}>{erro}</p>}
         </form>
     );
 };

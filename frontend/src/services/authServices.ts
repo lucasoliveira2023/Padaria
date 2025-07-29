@@ -1,9 +1,9 @@
 import axios from 'axios';
 
-export const login = async (email: string, password: string) => {
-    const response = await axios.post('http://localhost:3000/api/login', {
+export const login = async (email: string, senha: string) => {
+    const response = await axios.post('/padaria/usuarios/login/', {
         email,
-        password,
+        senha,
     });
 
     return response.data;
