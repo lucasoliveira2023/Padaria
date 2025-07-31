@@ -3,37 +3,41 @@ import '../pages/Login.css';
 
 
 type LoginFormProps = {
-    onLogin: (email: string, senha: string) => Promise<void> | void;
+    onLogin: (username: string, password: string) => Promise<void> | void;
 };
 
 const LoginForm: React.FC<LoginFormProps> = ({ onLogin }) => {
-    const [email, setEmail] = useState("");
-    const [senha, setSenha] = useState("");
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
     const [erro, setErro] = useState("");
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setErro('');
         try {
-            await onLogin(email, senha);
+            await onLogin(username, password);
         } catch (err: any) {
-            setErro("E-mail ou senha inválidos");
+            setErro("username ou senha inválidos");
         }
     };
 
     return (
         <form onSubmit={handleSubmit} className="login-form">
             <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="E-mail"
+                type="text"
+                name="username"
+                autoComplete="off"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                placeholder="Login"
                 required
             />
             <input
-                type="password"
-                value={senha}
-                onChange={e => setSenha(e.target.value)}
+                type="text"
+                name="password"
+                autoComplete="off"
+                value={password}
+                onChange={e => setPassword(e.target.value)}
                 placeholder="Senha"
                 required
             />

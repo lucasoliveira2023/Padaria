@@ -5,7 +5,7 @@ import api from "../services/api";
 interface AuthContextType {
     isAuthenticated: boolean;
     token: string | null;
-    signIn: (email: string, password: string) => Promise<boolean>;
+    signIn: (username: string, password: string) => Promise<boolean>;
     signOut: () => void;
 }
 
@@ -16,17 +16,21 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         localStorage.getItem("token")
     );
 
-    const singIn = async (email: string, password: string): Promise<boolean> => {
-        try {
-            const response = await api.post("/login", { email, password });
-            const { token } = response.data;
-            setToken(token);
-            localStorage.setItem("token", token);
-            return true;
-        } catch (error) {
-            console.error("Erro ao fazer login:", error);
-            return false;
-        }
+    const signIn = async (username: string, password: string): Promise<boolean> => {
+      try {
+        const response = await api.post("/padaria/usuarios/login/", {
+            username,
+            password,
+        });
+        const { access } = response.data;
+
+        setToken( access );
+        localStorage.setItem("token", access);
+        return true;
+      } catch (error) {
+        console.error("Error ao fazer login:", error);
+        return false;
+      }
     };
 
     const signOut = () => {
@@ -43,7 +47,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }, [token]);
 
     return (
-        <AuthContext.Provider value={{ isAuthenticated: !!token, token, signIn: singIn, signOut }}>
+        <AuthContext.Provider value={{ isAuthenticated: !!token, token, signIn, signOut }}>
             {children}
         </AuthContext.Provider>
     );
