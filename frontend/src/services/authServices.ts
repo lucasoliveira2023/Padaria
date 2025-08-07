@@ -1,7 +1,8 @@
-import axios from 'axios';
+import api from './api'
+
 
 export const login = async (username: string, password: string) => {
-    const response = await axios.post('/padaria/usuarios/login/', {
+    const response = await api.post('login/', {
         username,
         password,
     });

@@ -1,25 +1,24 @@
 // src/pages/LoginPage.tsx
 import React from 'react';
 import LoginForm from '../components/LoginForm';
-import { login } from '../services/authServices';
+import { useAuth } from '../context/AuthContext';
 
 const LoginPage: React.FC = () => {
-  const handleLogin = async (username: string, password: string) => {
-    try{
-      const response = await login(username, password);
+  const { signIn } = useAuth();
+
+  const handleLogin = async (username: string, password:string) =>{
+    const success = await signIn(username, password);
+    if (success) {
       alert('Login realizado com sucesso!');
-      console.log(response);
-    } catch (error) {
+    } else {
       alert('Falha no login. Verifique suas credenciais.');
-      console.error(error);
     }
-  }
+  };
 
   return (
-    <div className="login-page">
+    <div className='login-page'>
       <LoginForm onLogin={handleLogin} />
     </div>
   );
 };
-
 export default LoginPage;

@@ -18,10 +18,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     const signIn = async (username: string, password: string): Promise<boolean> => {
       try {
-        const response = await api.post("/padaria/usuarios/login/", {
+        const response = await api.post("login/", {
             username,
             password,
         });
+
         const { access } = response.data;
 
         setToken( access );
@@ -42,7 +43,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         if(token) {
             api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
         } else {
-            delete api.defaults.headers.common["Authorization"];
+          delete api.defaults.headers.common["Authorization"];
         }
     }, [token]);
 
