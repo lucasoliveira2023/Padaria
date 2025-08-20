@@ -23,10 +23,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             password,
         });
 
-        const { access } = response.data;
+        const { access, refresh } = response.data;
 
-        setToken( access );
+        setToken(access);
         localStorage.setItem("token", access);
+        localStorage.setItem("refresh", refresh)
         return true;
       } catch (error) {
         console.error("Error ao fazer login:", error);
