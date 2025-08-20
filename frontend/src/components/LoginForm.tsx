@@ -16,7 +16,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin }) => {
         setErro('');
         try {
             await onLogin(username, password);
-        } catch (err: any) {
+        } catch {
             setErro("username ou senha inválidos");
         }
     };
