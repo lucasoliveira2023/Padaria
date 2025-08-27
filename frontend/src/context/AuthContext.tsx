@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
+import {login as loginService} from "../services/authServices";
 import api from "../services/api";
 
 
@@ -18,16 +19,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     const signIn = async (username: string, password: string): Promise<boolean> => {
       try {
-        const response = await api.post("login/", {
-            username,
-            password,
-        });
-
-        const { access, refresh } = response.data;
-
-        setToken(access);
-        localStorage.setItem("token", access);
-        localStorage.setItem("refresh", refresh)
+        const response = await loginService(username, password);
+        setToken(response.access);
         return true;
       } catch (error) {
         console.error("Error ao fazer login:", error);
@@ -37,6 +30,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     const signOut = () => {
         localStorage.removeItem("token");
+        localStorage.removeItem("refresh");
         setToken(null);
     };
 
