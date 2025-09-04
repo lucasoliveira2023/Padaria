@@ -1,57 +1,57 @@
 import React, { useState } from "react";
 import { registerUser } from "../services/authServices";
 
-
 const RegisterPage: React.FC = () => {
-    const [form, setForm] = useState({
+  const [form, setForm] = useState({
+    username: "",
+    password: "",
+    nome_completo: "",
+    email: "",
+    cpf: "",
+  });
+
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+    setSuccess(false);
+
+    try {
+      await registerUser(form);
+
+      setSuccess(true);
+      setForm({
         username: "",
-        password:"",
-        nome_completo:"",
-        email:"",
-        cpf:"",
-    });
+        password: "",
+        nome_completo: "",
+        email: "",
+        cpf: "",
+      });
+    } catch (err: unknown) {
+      // Tratamento seguro do erro
+      if (err && typeof err === "object" && "response" in err) {
+        const axiosError = err as { response?: { data?: { message?: string } } };
+        setError(axiosError.response?.data?.message || "Erro ao registrar usuário");
+      } else if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("Erro ao registrar usuário");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
-    const [sucess, setSuccess] = useState(false);
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setForm({ ...form, [e.target.name]: e.target.value });
-    };
-
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setLoading(true);
-        setError(null);
-        setSuccess(false);
-
-
-        try {
-            await registerUser(form);
-
-            setSuccess(true);
-            setForm({
-                username: "",
-                password: "",
-                nome_completo: "",
-                email: "",
-                cpf: "",
-            });
-        } catch (err: unknown) {
-          if (err instanceof Error) {
-            setError(err.message);
-          } else if (err && typeof err === "object" && "response" in err && (err as any).response?.data?.message){
-            setError((err as any).response.data.message);
-          } else {
-            setError("Erro ao registrar usuário");
-          }
-        } finally {
-          setLoading(false);
-        }
-    };
-
-    return (
-         <div className="min-h-screen flex items-center justify-center bg-gray-100">
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <form
         onSubmit={handleSubmit}
         className="bg-white p-6 rounded-2xl shadow-md w-96 space-y-4"
@@ -119,13 +119,14 @@ const RegisterPage: React.FC = () => {
         </button>
 
         {error && <p className="text-red-500 text-sm">{error}</p>}
-        {sucess && (
-          <p className="text-green-500 text-sm">Usuário registrado com sucesso! Agora faça o login.</p>
+        {success && (
+          <p className="text-green-500 text-sm">
+            Usuário registrado com sucesso! Agora faça o login.
+          </p>
         )}
       </form>
     </div>
   );
 };
-
 
 export default RegisterPage;
