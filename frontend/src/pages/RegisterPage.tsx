@@ -28,6 +28,7 @@ const RegisterPage: React.FC = () => {
 
         try {
             await registerUser(form);
+
             setSuccess(true);
             setForm({
                 username: "",
@@ -113,7 +114,7 @@ const RegisterPage: React.FC = () => {
 
         {error && <p className="text-red-500 text-sm">{error}</p>}
         {sucess && (
-          <p className="text-green-500 text-sm">Usuário registrado com sucesso!</p>
+          <p className="text-green-500 text-sm">Usuário registrado com sucesso! Agora faça o login.</p>
         )}
       </form>
     </div>
