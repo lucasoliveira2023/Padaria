@@ -1,5 +1,5 @@
 //src/context/AuthContext.tsx
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useState, useEffect } from "react";
 import { login as loginService } from "../services/authServices";
 import api from "../services/api";
 
@@ -10,7 +10,7 @@ interface AuthContextType {
   signOut: () => void;
 }
 
-const AuthContext = createContext<AuthContextType>({} as AuthContextType);
+export const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [token, setToken] = useState<string | null>(localStorage.getItem("token"));
@@ -48,4 +48,3 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-export const useAuth = () => useContext(AuthContext);
