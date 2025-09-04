@@ -1,7 +1,7 @@
 // src/pages/LoginPage.tsx
 import React from 'react';
 import LoginForm from '../components/LoginForm';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../hooks/useAuth';
 
 const LoginPage: React.FC = () => {
   const { signIn } = useAuth();
