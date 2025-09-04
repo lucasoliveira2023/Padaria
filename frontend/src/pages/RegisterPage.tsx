@@ -37,10 +37,16 @@ const RegisterPage: React.FC = () => {
                 email: "",
                 cpf: "",
             });
-        } catch (err: any) {
-            setError(err.response?.data?.message || "Erro ao registrar usuário");
+        } catch (err: unknown) {
+          if (err instanceof Error) {
+            setError(err.message);
+          } else if (err && typeof err === "object" && "response" in err && (err as any).response?.data?.message){
+            setError((err as any).response.data.message);
+          } else {
+            setError("Erro ao registrar usuário");
+          }
         } finally {
-            setLoading(false);
+          setLoading(false);
         }
     };
 
