@@ -21,7 +21,8 @@ services:
       - ./backend:/app
     restart: unless-stopped
     depends_on:
-      - db
+      db:
+      condition: service_healthy
 
   db:
     image: postgres:17
