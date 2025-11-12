@@ -1,5 +1,7 @@
 from django.urls import reverse
+from rest_framework import status
 from rest_framework.test import APITestCase
+from rest_framework_simplejwt.tokens import RefreshToken
 
 from usuarios.models import Usuario
 
@@ -126,3 +128,40 @@ class LoginViewTest(APITestCase):
 
         self.assertEqual(response.status_code, 401)
         self.assertEqual(response.data["detail"], "Usuário ou senha inválidos.")
+
+
+class GetProfileViewUserTests(APITestCase):
+    def setUp(self):
+        self.username = "testuser"
+        self.password = "testpassword"
+        self.user = Usuario.objects.create_user(
+            username=self.username,
+            password=self.password,
+            email="test@exemple.com",
+            nome_completo="Test User",
+            cpf="12345678901",
+        )
+
+        self.refresh = RefreshToken.for_user(self.user)
+        self.access_token = str(self.refresh.access_token)
+
+        self.url = reverse("usuarios:user-profile")
+
+    def test_get_profile_autenticado(self):
+        self.client.credentials(HTTP_AUTHORIZATION=f"Bearer{self.access_token}")
+        response = self.client.get(self.url, format="json")
+
+        self.assertEqual(response.data["username"], self.username)
+        self.assertEqual(response.data["email"], self.user.email)
+        self.assertEqual(response.data["cpf"], self.user.cpf)
+        self.assertEqual(response.data["nome_completo"], self.user.nome_completo)
+        self.assertEqual(response.data["tipo_usuario"], self.user.tipo_usuario)
+        self.assertEqual(response.data["ativo"], self.user.ativo)
+
+        self.assertIn("sexo", response.data)
+        self.assertIn("endereco", response.data)
+        self.assertIn("data_nascimento", response.data)
+
+    def test_get_profile_nao_autenticado(self):
+        response = self.client.get(self.url, format="json")
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)

@@ -79,7 +79,7 @@ class LoginView(APIView):
 class GetProfileViewUser(APIView):
     permission_classes = [IsAuthenticated]
 
-    def get_profile(self, request):
+    def get(self, request):
 
         serializer = UsuarioProfileSerializer(request.user)
         return Response(serializer.data)
