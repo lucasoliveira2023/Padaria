@@ -1,9 +1,13 @@
+from django.urls import reverse
 from rest_framework.test import APITestCase
 
 from usuarios.serializers import RegistroUsuarioSerializer
 
 
 class RegistroUsuarioSerializerTest(APITestCase):
+    def setUp(self):
+        self.url = reverse("usuarios:registro-usuario")
+
     def test_serializer_valido(self):
         dados = {
             "username": "lucas123",
@@ -67,3 +71,8 @@ class RegistroUsuarioSerializerTest(APITestCase):
         }
         serializer = RegistroUsuarioSerializer(data=dados)
         self.assertTrue(serializer.is_valid())
+
+    def test_serializer_invalido_retorna_400(self):
+        dados = {}
+        response = self.client.post(self.url, data=dados, format="json")
+        self.assertEqual(response.status_code, 400)
