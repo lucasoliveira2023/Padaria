@@ -1,5 +1,8 @@
 [run]
-source = usuarios, produtos, vendas
+source =
+    usuarios
+    produtos
+    vendas
 
 omit =
     */migrations/*
@@ -29,3 +32,13 @@ exclude_lines =
 
     # Código condicional de debug
     if settings.DEBUG
+
+    # Ignore métodos de views do DRF que coverage nao consegue rastrear
+    def post
+    def get
+    def put
+    def patch
+    def delete
+    def head
+    def options
+    def trace

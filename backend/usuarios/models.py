@@ -1,6 +1,8 @@
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import RegexValidator
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 
 class Usuario(AbstractUser):
@@ -52,3 +54,45 @@ class Usuario(AbstractUser):
 
     def __str__(self):  # pragma: no cover
         return self.username
+
+
+class Profile(models.Model):
+    SEXO_CHOICES = [
+        ("M", "Masculino"),
+        ("F", "Feminino"),
+        ("O", "Outro"),
+    ]
+
+    usuario = models.OneToOneField(
+        Usuario, on_delete=models.CASCADE, related_name="profile"
+    )
+    endereco = models.CharField(
+        max_length=255, blank=True, null=True, verbose_name="Endereço"
+    )
+    data_nascimento = models.DateField(
+        blank=True, null=True, verbose_name="Data de Nascimento"
+    )
+    preferencia_horario_atendimento = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True,
+        verbose_name="Horario de Atendimento Preferido",
+    )
+    sexo = models.CharField(
+        max_length=1, choices=SEXO_CHOICES, default="O", verbose_name="sexo"
+    )
+
+    def __str__(self):
+        return f"Profile de {self.usuario.username}"
+
+
+@receiver(post_save, sender=Usuario)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.create(usuario=instance)
+
+
+@receiver(post_save, sender=Usuario)
+def save_user_profile(sender, instance, **kwargs):
+    if hasattr(instance, "profile"):
+        instance.profile.save()

@@ -1,12 +1,13 @@
 # 'view usuario'
 from django.contrib.auth import authenticate
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from usuarios.models import Usuario
-from usuarios.serializers import RegistroUsuarioSerializer
+from usuarios.serializers import RegistroUsuarioSerializer, UsuarioProfileSerializer
 
 
 class RegistroUsuarioView(APIView):
@@ -73,3 +74,12 @@ class LoginView(APIView):
                 {"detail": "Usuário ou senha inválidos."},
                 status=status.HTTP_401_UNAUTHORIZED,
             )
+
+
+class GetProfileViewUser(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+
+        serializer = UsuarioProfileSerializer(request.user)
+        return Response(serializer.data)
