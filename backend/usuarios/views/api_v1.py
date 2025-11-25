@@ -85,14 +85,10 @@ class GetProfileViewUser(APIView):
         return Response(serializer.data)
 
 
-class GetAllUsers(APIView): # pragma: no cover
-    permission_classes = [IsAuthenticated] 
+class GetAllUsers(APIView):  # pragma: no cover
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
         users = Usuario.objects.all().values("id", "username", "email", "nome_completo")
 
-        return Response({
-            "message": "Acesso concedido",
-            "users": list(users)
-        })
-    
+        return Response({"message": "Acesso concedido", "users": list(users)})

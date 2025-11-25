@@ -228,9 +228,9 @@ class GetAllUsersViewTests(APITestCase):
         self.access_token = str(self.refresh.access_token)
 
         self.urls = reverse("usuarios:get-all-users")
-    
+
     def test_get_all_users_autenticated(self):
-        self.client.credentials(HTTP_AUTHORIZATION=f"Bearer { self.access_token}")
+        self.client.credentials(HTTP_AUTHORIZATION=f"Bearer{self.access_token}")
         response = self.client.get(self.urls, format="json")
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -242,7 +242,7 @@ class GetAllUsersViewTests(APITestCase):
         usernames = [user["username"] for user in response.data["users"]]
         self.assertIn("user1", usernames)
         self.assertIn("user2", usernames)
-    
+
     def test_get_all_users_nao_autenticados(self):
         response = self.client.get(self.urls, format="json")
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
