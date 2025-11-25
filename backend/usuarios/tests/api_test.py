@@ -205,3 +205,44 @@ class GetProfileViewUserTests(APITestCase):
     def test_get_profile_nao_autenticado(self):
         response = self.client.get(self.url, format="json")
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+
+class GetAllUsersViewTests(APITestCase):
+    def setUp(self):
+        self.user1 = Usuario.objects.create_user(
+            username="user1",
+            password="SenhaForte1#",
+            email="user1@exemple.com",
+            nome_completo="User Um",
+            cpf="11111111111",
+        )
+        self.user2 = Usuario.objects.create_user(
+            username="user2",
+            password="SenhaForte2#",
+            email="user2@exemple.com",
+            nome_completo="User Dois",
+            cpf="22222222222",
+        )
+
+        self.refresh = RefreshToken.for_user(self.user1)
+        self.access_token = str(self.refresh.access_token)
+
+        self.urls = reverse("usuarios:get-all-users")
+    
+    def test_get_all_users_autenticated(self):
+        self.client.credentials(HTTP_AUTHORIZATION=f"Bearer { self.access_token}")
+        response = self.client.get(self.urls, format="json")
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIn("message", response.data)
+        self.assertEqual(response.data["message"], "Acesso concedido")
+        self.assertIn("users", response.data)
+        self.assertEqual(len(response.data["users"]), 2)
+
+        usernames = [user["username"] for user in response.data["users"]]
+        self.assertIn("user1", usernames)
+        self.assertIn("user2", usernames)
+    
+    def test_get_all_users_nao_autenticados(self):
+        response = self.client.get(self.urls, format="json")
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
