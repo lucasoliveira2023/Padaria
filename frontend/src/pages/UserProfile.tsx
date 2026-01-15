@@ -20,7 +20,7 @@ const UserProfile: React.FC = () => {
             try {
                 const response = await axios.get<UserProfileData>("/usuarios/profile");
                 setUser(response.data);
-            } catch (err) {
+            } catch  {
                 setError("Error ao carregar perfil do usuário.");
             } finally {
                 setLoading(false);
