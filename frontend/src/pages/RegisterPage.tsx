@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { registerUser } from "../services/authServices";
+import "./RegisterPage.css";
 
 const RegisterPage: React.FC = () => {
   const [form, setForm] = useState({
@@ -36,7 +37,6 @@ const RegisterPage: React.FC = () => {
         cpf: "",
       });
     } catch (err: unknown) {
-      // Tratamento seguro do erro
       if (err && typeof err === "object" && "response" in err) {
         const axiosError = err as { response?: { data?: { message?: string } } };
         setError(axiosError.response?.data?.message || "Erro ao registrar usuário");
@@ -51,80 +51,64 @@ const RegisterPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white p-6 rounded-2xl shadow-md w-96 space-y-4"
-      >
-        <h1 className="text-xl font-bold text-center text-gray-700">
-          Registro de Usuário
-        </h1>
+    <div className="register-page-wrapper">
+      <div className="register-container">
+        <form onSubmit={handleSubmit} className="register-form">
+          <h1>Registro de Usuário</h1>
 
-        <input
-          type="text"
-          name="username"
-          placeholder="Usuário"
-          value={form.username}
-          onChange={handleChange}
-          className="w-full p-2 border rounded"
-          required
-        />
+          <input
+            type="text"
+            name="username"
+            placeholder="Usuário"
+            value={form.username}
+            onChange={handleChange}
+            required
+          />
 
-        <input
-          type="password"
-          name="password"
-          placeholder="Senha"
-          value={form.password}
-          onChange={handleChange}
-          className="w-full p-2 border rounded"
-          required
-        />
+          <input
+            type="password"
+            name="password"
+            placeholder="Senha"
+            value={form.password}
+            onChange={handleChange}
+            required
+          />
 
-        <input
-          type="text"
-          name="nome_completo"
-          placeholder="Nome Completo"
-          value={form.nome_completo}
-          onChange={handleChange}
-          className="w-full p-2 border rounded"
-          required
-        />
+          <input
+            type="text"
+            name="nome_completo"
+            placeholder="Nome Completo"
+            value={form.nome_completo}
+            onChange={handleChange}
+            required
+          />
 
-        <input
-          type="email"
-          name="email"
-          placeholder="E-mail"
-          value={form.email}
-          onChange={handleChange}
-          className="w-full p-2 border rounded"
-          required
-        />
+          <input
+            type="email"
+            name="email"
+            placeholder="E-mail"
+            value={form.email}
+            onChange={handleChange}
+            required
+          />
 
-        <input
-          type="text"
-          name="cpf"
-          placeholder="CPF"
-          value={form.cpf}
-          onChange={handleChange}
-          className="w-full p-2 border rounded"
-          required
-        />
+          <input
+            type="text"
+            name="cpf"
+            placeholder="CPF"
+            value={form.cpf}
+            onChange={handleChange}
+            required
+          />
 
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition"
-        >
-          {loading ? "Registrando..." : "Registrar"}
-        </button>
+          <button type="submit" disabled={loading}>
+            {loading ? "Registrando..." : "Registrar"}
+          </button>
 
-        {error && <p className="text-red-500 text-sm">{error}</p>}
-        {success && (
-          <p className="text-green-500 text-sm">
-            Usuário registrado com sucesso! Agora faça o login.
-          </p>
-        )}
-      </form>
+          {error && <p className="error">{error}</p>}
+          {success && <p className="success">Usuário registrado com sucesso! Agora faça o login.</p>}
+        </form>
+      </div>
     </div>
   );
 };
