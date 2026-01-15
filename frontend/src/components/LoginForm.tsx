@@ -4,9 +4,10 @@ import '../pages/Login.css';
 
 type LoginFormProps = {
     onLogin: (username: string, password: string) => Promise<void> | void;
+    className?: string;
 };
 
-const LoginForm: React.FC<LoginFormProps> = ({ onLogin }) => {
+const LoginForm: React.FC<LoginFormProps> = ({ onLogin, className }) => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [erro, setErro] = useState("");
@@ -22,7 +23,8 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin }) => {
     };
 
     return (
-        <form onSubmit={handleSubmit} className="login-form">
+        <form onSubmit={handleSubmit} className={className || "auth-form"}>
+            <h1 style={{ textAlign: "center", marginBottom: "1rem", color: "#1c51bb" }}>Login</h1>
             <input
                 type="text"
                 name="username"

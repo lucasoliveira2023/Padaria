@@ -1,24 +1,58 @@
 // src/pages/LoginPage.tsx
-import React from 'react';
-import LoginForm from '../components/LoginForm';
-import { useAuth } from '../hooks/useAuth';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { login } from "../services/authServices";
+import "../pages/Login.css";
 
 const LoginPage: React.FC = () => {
-  const { signIn } = useAuth();
+  const navigate = useNavigate();
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
-  const handleLogin = async (username: string, password:string) =>{
-    const success = await signIn(username, password);
-    if (success) {
-      alert('Login realizado com sucesso!');
-    } else {
-      alert('Falha no login. Verifique suas credenciais.');
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+
+    try {
+      await login(username, password);
+      alert("Login realizado com sucesso!");
+      navigate("/"); // redireciona para a home
+    } catch (err) {
+      console.error(err);
+      setError("Falha no login. Verifique suas credenciais.");
     }
   };
 
   return (
-    <div className='login-page'>
-      <LoginForm onLogin={handleLogin} />
+    <div className="register-page-wrapper">
+      <div className="register-container">
+        <form onSubmit={handleLogin} className="register-form">
+          <h1>Login</h1>
+
+          <input
+            type="text"
+            placeholder="Usuário"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            required
+          />
+
+          <input
+            type="password"
+            placeholder="Senha"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+
+          <button type="submit">Entrar</button>
+
+          {error && <p className="error">{error}</p>}
+        </form>
+      </div>
     </div>
   );
 };
+
 export default LoginPage;

@@ -1,49 +1,47 @@
-
-.login-container {
+/* cores e card iguais ao registro */
+.auth-page {
   display: flex;
-  height: 100vh;
   justify-content: center;
   align-items: center;
-  justify-content: center;
-  background-color: #1c51bb;
+  height: 100vh;
+  background-color: #f5f5f5; /* mesma cor da página de registro */
 }
 
-.login-form {
-  background-color: #1f1f1f;
+.auth-form {
+  background-color: #fff; /* card claro */
   padding: 2rem;
   border-radius: 10px;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  width: 400px;
-  max-width: 350px;
+  width: 100%;
+  max-width: 400px;
 }
 
-.login-form input {
+.auth-form input {
   padding: 0.75rem;
   border-radius: 5px;
-  border:  2px solid red;
-  background-color: #f3eeee !important;
-  color:#000000 !important;
-  caret-color: #000 !important;
+  border: 1px solid #ccc;
+  background-color: #f9f9f9;
+  color: #000;
 }
 
-.login-form input::placeholder {
+.auth-form input::placeholder {
   color: #aaa;
 }
 
-.login-form button {
+.auth-form button {
   padding: 0.75rem;
-  background-color: #4caf50;
+  border-radius: 5px;
   border: none;
-  color: white;
+  background-color: #4caf50;
+  color: #fff;
   font-weight: bold;
   cursor: pointer;
-  border-radius: 4px;
   transition: background-color 0.2s;
 }
 
-.login-form button:hover {
+.auth-form button:hover {
   background-color: #43a047;
 }
